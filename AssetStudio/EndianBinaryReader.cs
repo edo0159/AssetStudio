@@ -47,6 +47,23 @@ namespace AssetStudio
             }
             return base.ReadInt32();
         }
+        
+        public string ReadStringToNull(int maxLength = 32767)
+        {
+            var bytes = new List<byte>();
+            int count = 0;
+            while (BaseStream.Position != BaseStream.Length && count < maxLength)
+            {
+                var b = ReadByte();
+                if (b == 0)
+                {
+                    break;
+                }
+                bytes.Add(b);
+                count++;
+            }
+            return Encoding.UTF8.GetString(bytes.ToArray());
+        }
 
         public override long ReadInt64()
         {

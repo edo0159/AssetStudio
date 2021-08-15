@@ -34,6 +34,23 @@ namespace AssetStudioGUI
                 return true;
             }
         }
+        
+        public static bool ExportTexture2DToPng(AssetItem item, string exportPath)
+        {
+            var m_Texture2D = (Texture2D)item.Asset;
+            const ImageFormat type = ImageFormat.Png;
+            item.Text = m_Texture2D.m_Name;
+            if (!TryExportFile(exportPath, item, "." + type.ToString().ToLower(), out var exportFullPath))
+                return false;
+            var stream = m_Texture2D.ConvertToStream(type, true);
+            if (stream == null)
+                return false;
+            using (stream)
+            {
+                File.WriteAllBytes(exportFullPath, stream.ToArray());
+                return true;
+            }
+        }
 
         public static bool ExportAudioClip(AssetItem item, string exportPath)
         {
